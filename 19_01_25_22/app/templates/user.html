@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <tr>
+        <td>
+            <h2>{{ user.username }} 的主页</h2>
+            <br>
+            {% if user.about_me %}<p>个性签名 {{ user.about_me }}</p>{% endif %}
+            {% if user == current_user %}
+            <p><a href="{{ url_for('edit_profile') }}">修改个人信息</a></p>
+            {% endif %}
+            {% if user.last_seen %}<p>最后登录于 {{ user.last_seen }}</p>{% endif %}
+            <br>
+            <p>粉丝 {{ user.followers.count() }}, 已关注 {{ user.followed.count() }}</p>
+            {% if user == current_user %}
+            {% elif not current_user.is_following(user) %}
+            <p><a href="{{ url_for('follow', username=user.username) }}">Follow</a></p>
+            {% else %}
+            <p><a href="{{ url_for('unfollow', username=user.username) }}">Unfollow</a></p>
+            {% endif %}
+        </td>
+    </tr>
+    {% for post in posts %}
+        {% include '_post.html' %}
+    {% endfor %}
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous{% if not prev_url %} disabled{% endif %}">
+                <a href="{{ prev_url or '#' }}">
+                    <span aria-hidden="true">&larr;</span> 上一页
+                </a>
+            </li>
+            <li class="next{% if not next_url %} disabled{% endif %}">
+                <a href="{{ next_url or '#' }}">
+                    下一页 <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}
