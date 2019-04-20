@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{{ user.username }} 的主页</h1>
+    {% if user.about_me %}<h3>个性签名 {{ user.about_me }}</h3>{% endif %}
+    {% if user.last_seen %}<p>最后登录于 {{ user.last_seen }}</p>{% endif %}
+    <p>粉丝 {{ user.followers.count() }}, 已关注 {{ user.followed.count() }}</p>
+    {% if user == current_user %}
+    {% elif not current_user.is_following(user) %}
+    <p><a href="{{ url_for('follow', username=user.username) }}">Follow</a></p>
+    {% else %}
+    <p><a href="{{ url_for('unfollow', username=user.username) }}">Unfollow</a></p>
+    {% endif %}
+    {% for post in posts %}
+        {% include '_post.html' %}
+    {% endfor %}
+    {% if prev_url %}
+    <a href="{{ prev_url }}">上一页</a>
+    {% endif %}
+    {% if next_url %}
+    <a href="{{ next_url }}">下一页</a>
+    {% endif %}
+    {% if user == current_user %}
+    <p><a href="{{ url_for('edit_profile') }}">修改个人信息</a></p>
+    {% endif %}
+{% endblock %}
