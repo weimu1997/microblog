@@ -9,6 +9,7 @@
     <body>
         <div>
           微博:
+          <a href="{{ url_for('login') }}">发表</a>
           {% if current_user.is_anonymous %}
           <a href="{{ url_for('login') }}">登录</a>
           {% else %}
